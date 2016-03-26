@@ -8,7 +8,7 @@ var crypto = require('crypto')
     default: "USER",
     enum: ["USER", "ADMIN"]
   },
-  name: String,
+  username: String,
   email: String,
   location : {
   	longitude : String,
@@ -22,7 +22,13 @@ var crypto = require('crypto')
 schema.statics.login = function(data, options){
   var promise = promiseAdapter.defer();
 	var self = this;
-	self.findOne({email: data.email})
+	var condition = {};
+	if (data.email) {
+		condition.email = data.email;
+	} else if(data.username){
+		condition.username = data.username;
+	}
+	self.findOne(condition)
 	.then(function(user){
 		if (user == null) {
 			promise.reject({
@@ -96,7 +102,6 @@ schema.statics.register = function(params, options){
 	 		user.sessionId = md5session.digest("hex");
 	 		user.save()
 			.then(function(user) {
-				console.log(user)
 				promise.resolve({
 		      code: responseCode.SUCCESS,
 		      description : "Success",
