@@ -1,6 +1,7 @@
 var schema = BaseModel.extend({
   content : String,
   ownerId : String,
+  channelId : String,
   location : {
   	longitude : String,
   	latitude : String

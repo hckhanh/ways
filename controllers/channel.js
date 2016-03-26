@@ -19,7 +19,7 @@ exports.postMessage = function(req, res){
 	checkParams(["content"])
 	.then(function(){
 		var params = _.pick(req.body, "content", "file", "location");
-		console.log(req.channel)
+		params.ownerId = req.user._id;
 		req.channel.postMessage(params)
 		.then(function(message){
 			outData({
@@ -30,5 +30,17 @@ exports.postMessage = function(req, res){
 		})
 	}, function(err){
 		outData(err, res);
+	})
+}
+
+exports.getMessage = function(req,res){
+	console.log(req.channel)
+	req.channel.getMessage()
+	.then(function(messages){
+		outData({
+	      code: responseCode.SUCCESS,
+	      description : "Success",
+	      response: messages
+	    }, res)
 	})
 }

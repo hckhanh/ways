@@ -13,7 +13,7 @@ var schema = BaseModel.extend({
   },
   time_to_live : {
   	type: Number,
-  	default: 30*60*1000
+  	default: 1800000
   }
 });
 
