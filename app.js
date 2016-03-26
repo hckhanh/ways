@@ -1,7 +1,7 @@
 require('./global');
 var application_root = __dirname,
     express = require("express"),
-    https = require('https'),
+    http = require('http'),
     path = require("path"),
     fs = require("fs"),
     mongoose = require('mongoose'),
@@ -14,12 +14,7 @@ if (!process.env.NODE_ENV) {
 mongoose.connect(config.database);
 
 var app = require('./express');
-var options = {
-  key: fs.readFileSync('sivy.pem'),
-  cert: fs.readFileSync('sivy.crt')
-};
-
-var server = https.createServer(options,app);
+var server = http.createServer(app);
 
 server.listen(config.port, function(){
 	console.log("listen from port " + config.port);

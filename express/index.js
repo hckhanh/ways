@@ -23,7 +23,7 @@ console.timeEnd("Loading route index");
 var versions = config.version || ["v1.0"];
 var type =  config.type || "dev";
 /*end load*/
-routes = ["users","channels"];
+routes = ["users"];
 _.each(versions, function(version){
 	_.each(routes, function(route){
 	  console.time("Loading route " + version + " " + route);
