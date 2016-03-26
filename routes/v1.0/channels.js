@@ -20,6 +20,8 @@ var getChannel = function(req,res, next) {
 	})
 }
 
+router.get("/", userMiddleware.getUserAndRequire ,channelController.postChannel);
 router.post("/", userMiddleware.getUserAndRequire ,channelController.postChannel);
+router.get("/:id", getChannel ,channelController.getMessage);
 router.post("/:id", getChannel, userMiddleware.getUserAndRequire ,channelController.postMessage);
 module.exports = router;
