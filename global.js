@@ -10,7 +10,7 @@ global.responseCode = {
 	INVALID_PARAMS :              -2,
 	DATA_NOT_EXISTS :             -3,
 	DATA_EXSISTS :                -4,
-	PERMISSON	: 				-5,
+	PERMISSON	: 				  -5,
 	EXCEPTION :                  -10,
 	EXPIRED :                    -11,
 	IS_USED :                    -12,
@@ -51,36 +51,6 @@ checkParams = function(req, res, params){
 }
 
 
-global.checkHeader = function(req, res, next){
-	if( typeof req.headers['authorization'] == 'undefined' ||
-		typeof req.headers['buildnumber'] == 'undefined' ||
-		typeof req.headers['os'] == 'undefined' ||
-		typeof req.headers['deviceid'] == 'undefined'
-	) 
-		outData({
-	      code: responseCode.UNAUTHORIZED,
-	      description :  "Missing header param(s)",
-	      response: null
-	    }, res);
-	else {
-		var header=req.headers['authorization']||'',        // get the header
-	        token=header.split(/\s+/).pop()||'',            // and the encoded auth token
-	        auth=new Buffer(token, 'base64').toString(),    // convert from base64
-	       	parts=auth.split(/:/),                          // split on colon
-	        username=parts[0],
-	        password=parts[1];
-
-	    if (username != "sivy_api" || password != "imsuperman") {
-	    	outData({
-		      code: responseCode.UNAUTHORIZED,
-		      description :  "Unauthorize",
-		      response: null
-		    }, res);
-	    } else {
-	    	next();
-	    }
-	}
-}
 
 global.makeid = function(length){
   var text = "";
@@ -102,89 +72,3 @@ global.constants = requireFromRoot('config/constants.json');
 
 global.BaseModel = requireFromRoot('models/base')
 global.extend = require('mongoose-schema-extend')
-
-global.requestData = function(url, method, body, header, type) {
-	var URL = require('url');
-	if (type && type == "https") {
-		var http = require('https');	
-	} else {
-		var http = require('http');
-	}
-	
-  var deferred = promiseAdapter.defer();
-  
-  var options = URL.parse(url);
-  options.method = method || "GET";
-  options.headers = header
-
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf8');
-
-    var data = '';
-
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function() {
-      try {
-        deferred.resolve(JSON.parse(data));
-      } catch (e) {
-        deferred.reject(e);
-      }
-    });
-  });
-
-  req.on('error', function(err) {
-    console.log('call api error');
-    console.log(err);
-    deferred.reject(err);
-  });
-
-  if (method == 'POST')
-    req.write(JSON.stringify(body));
-
-  req.end();
-
-  return deferred.promise;
-}
-
-global.downloadWebsite = function(url, type) {
-	var URL = require('url');
-	if (type && type == "https") {
-		var http = require('https');	
-	} else {
-		var http = require('http');
-	}
-	
-  var deferred = promiseAdapter.defer();
-  
-  var options = URL.parse(url);
-  options.method =  "GET";
-  
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf8');
-
-    var data = '';
-
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function() {
-      try {
-        deferred.resolve(data);
-      } catch (e) {
-        deferred.reject(e);
-      }
-    });
-  });
-
-  req.on('error', function(err) {
-    deferred.reject(err);
-  });
-
-  req.end();
-
-  return deferred.promise;
-}
