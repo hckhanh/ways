@@ -24,4 +24,6 @@ router.get("/", userMiddleware.getUserAndRequire ,channelController.postChannel)
 router.post("/", userMiddleware.getUserAndRequire ,channelController.postChannel);
 router.get("/:id", getChannel ,channelController.getMessage);
 router.post("/:id", getChannel, userMiddleware.getUserAndRequire ,channelController.postMessage);
+router.get("/:id/subcribe", getChannel, userMiddleware.getUserAndRequire ,channelController.subcribe);
+router.get("/:id/unsubcribe", getChannel, userMiddleware.getUserAndRequire ,channelController.unsubcribe);
 module.exports = router;
