@@ -52,12 +52,17 @@ schema.methods.update = function(data){
 	// return Message.find("")
 }
 
-schema.methods.sendMessage = function(data){
+schema.methods.postMessage = function(data){
 	var self = this;
 	var promise = promiseAdapter.defer();
 	var message = new Message(data);
-	message.channelId = self._id
-	return message.save();
+	message.channelId = self._id;
+	message.save()
+	.then(function(message){
+		promise.resolve(message)
+	});
+
+	return promise.promise;
 }
 
 
