@@ -13,3 +13,22 @@ exports.postChannel = function(req,res){
 	    }, res)
 	})
 }
+
+
+exports.postMessage = function(req, res){
+	checkParams(["content"])
+	.then(function(){
+		var params = _.pick(req.body, "content", "file", "location");
+		console.log(req.channel)
+		req.channel.postMessage(params)
+		.then(function(message){
+			outData({
+		      code: responseCode.SUCCESS,
+		      description : "Success",
+		      response: message
+		    }, res)
+		})
+	}, function(err){
+		outData(err, res);
+	})
+}
