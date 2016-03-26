@@ -40,7 +40,7 @@ var checkRegisterParams = function(req,res,next){
 
 router.post("/login", checkLoginParams ,userController.login);
 
-//router.post("/register", checkRegisterParams, userController.register);
+router.post("/register", checkRegisterParams, userController.register);
 
 // router.put("/",	userMiddleware.getUserAndRequire, userController.edit);
 

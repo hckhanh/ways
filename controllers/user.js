@@ -11,3 +11,13 @@ exports.login = function(req, res){
 		outData(err, res);
 	})
 }
+
+exports.register = function(req,res){
+	var params = _.pick(req.body, "username", "email", "password");
+	User.register(params)
+	.then(function(user){
+		outData(user, res);
+	}, function(err){
+		outData(err, res);
+	})
+}

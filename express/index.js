@@ -28,7 +28,7 @@ _.each(versions, function(version){
 	_.each(routes, function(route){
 	  console.time("Loading route " + version + " " + route);
 	  contentRouter = requireFromRoot("routes/"  + version + "/" + route);
-	  app.use(route,contentRouter);
+	  app.use("/"+route,contentRouter);
 	  console.timeEnd("Loading route " + version + " " + route);
 	});
 });

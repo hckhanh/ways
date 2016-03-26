@@ -10,8 +10,12 @@ var crypto = require('crypto')
   },
   name: String,
   email: String,
+  location : {
+  	longitude : String,
+  	latitude : String
+  },
   password: String,
-  sessionId: Number,
+  sessionId: String,
   sessionTime: Number
 });
 
@@ -39,7 +43,7 @@ schema.statics.login = function(data, options){
 			} else {
 				user.sessionTime = (new Date()).getTime();
 				var md5session = crypto.createHash('md5');
-				md5session.update(user._id + currentTimestamp);
+				md5session.update(user._id + user.sessionTime);
  	 			user.sessionId = md5session.digest("hex");
 				user.save()
 				.then(function(user) {
@@ -68,7 +72,7 @@ schema.statics.register = function(params, options){
   var promise = promiseAdapter.defer();
   self.findOne({email: params.email})
   .then(function(user){
-    if (user) {
+  	if (user) {
       promise.reject({
           code: responseCode.DATA_EXSISTS,
           description : "Email has been taken by another user",
@@ -86,17 +90,24 @@ schema.statics.register = function(params, options){
       });
       
       user.sessionTime = (new Date()).getTime();
-			var md5session = crypto.createHash('md5');
-			md5session.update(user._id + currentTimestamp);
-	 		user.sessionId = md5session.digest("hex");
 
-     	user.save()
+			var md5session = crypto.createHash('md5');
+			md5session.update(user._id + user.sessionTime);
+	 		user.sessionId = md5session.digest("hex");
+	 		user.save()
 			.then(function(user) {
-				promise.reject({
+				console.log(user)
+				promise.resolve({
 		      code: responseCode.SUCCESS,
 		      description : "Success",
 		      response: user
 		    });
+			}, function(err){
+				promise.reject({
+		      code: responseCode.FAIL,
+		      description : err,
+		      response: null
+	    	});
 			});
     }
   },function(err){
@@ -109,3 +120,5 @@ schema.statics.register = function(params, options){
 
   return promise.promise;
 }
+
+module.exports = User = mongoose.model('user', schema);
