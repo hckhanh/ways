@@ -23,6 +23,7 @@
     "ejs": "^2.3.4",
     "email-templates": "^2.0.1",
     "express": "^4.13.3",
+    "faye": "^1.1.2",
     "fbgraph": "^1.1.0",
     "gm": "^1.21.1",
     "imagemagick": "^0.1.3",
