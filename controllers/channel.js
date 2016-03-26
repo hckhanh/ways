@@ -1,5 +1,6 @@
 var Channel = requireFromRoot('models/channel')
 var Subcribe = requireFromRoot('models/subcribe')
+var User = requireFromRoot('models/user')
  
 exports.postChannel = function(req,res){
 	console.log(req.user)
@@ -16,6 +17,89 @@ exports.postChannel = function(req,res){
 }
 
 exports.getListChannel = function(req,res){
+	//get all public channel
+	var listChannel = [];
+	Channel.find({type: "PUBLIC"})
+	.then(function(channels){
+		//get list user subcribe 
+		listChannel = channels;
+		if (req.user) {
+			Subcribe.find({
+				userId : req.user._id
+			})
+			.then(function(subcribes){
+				var tasks = [];
+				_.each(subcribes, function(sub){
+					tasks.push(Channel.findOne({_id: sub.channelId})
+					.then(function(channel){
+						if (channel) {
+							var even = _.find(listChannel, function(channell){ 
+								return channell._id.equals(channel._id); 
+							});
+							if (!even) {
+								listChannel.push(channel);
+								return channel;
+							} else {
+								return null;
+							}
+						} else {
+							return null;
+						}
+						
+					}));
+					
+				})
+
+				promiseAdapter.all(tasks)
+				.then(function(){
+					var getUserTasks = []
+					_.each(listChannel, function(channel){
+						getUserTasks.push(User.findOne({_id : channel.ownerId})
+						.then(function(user){
+							channel = channel.toObject();
+							channel.user = {
+								username: user.username,
+								email: user.email,
+								avatar: user.avatar,
+							}
+							return channel;
+						}))
+					})
+					promiseAdapter.all(getUserTasks)
+					.then(function(channels){
+						outData({
+					      code: responseCode.SUCCESS,
+					      description : "Success",
+					      response: channels
+					    }, res)
+					})
+				})
+			})
+		} else {
+			var getUserTasks = []
+			_.each(listChannel, function(channel){
+				getUserTasks.push(User.findOne({_id : channel.ownerId})
+				.then(function(user){
+					channel = channel.toObject();
+					channel.user = {
+						username: user.username,
+						email: user.email,
+						avatar: user.avatar,
+					}
+					return channel;
+				}))
+			})
+			promiseAdapter.all(getUserTasks)
+			.then(function(channels){
+				outData({
+			      code: responseCode.SUCCESS,
+			      description : "Success",
+			      response: channels
+			    }, res)
+			})
+		}
+		
+	})
 
 }
 
@@ -25,7 +109,6 @@ exports.subcribe = function(req,res){
 		channelId : req.channel._id
 	})
 	.then(function(sub){
-		console.log(sub)
 		if (sub) {
 			outData({
 				code: responseCode.DATA_EXSISTS,
@@ -94,7 +177,6 @@ exports.postMessage = function(req, res){
 }
 
 exports.getMessage = function(req,res){
-	console.log(req.channel)
 	req.channel.getMessage()
 	.then(function(messages){
 		outData({

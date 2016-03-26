@@ -35,6 +35,7 @@ exports.getUserNotRequire = function(req, res, next){
 	} else {
 		User.findOne({sessionId: req.headers.sessionid})
 		.then(function(user){	
+			console.log(user)
 			if (user == null){
 				next();
 			} else {
