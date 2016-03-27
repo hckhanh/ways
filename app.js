@@ -27,6 +27,6 @@ server.listen(config.port, function(){
     });
 
     bayeux.attach(server);
-    global.fayeClients.push(bayeux.getClient());
+    fayeClients.push(bayeux.getClient());
     console.log('Faye Server listening on port: ' + config.faye_port);
 });
