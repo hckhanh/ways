@@ -18,4 +18,15 @@ var server = http.createServer(app);
 
 server.listen(config.port, function(){
 	console.log("listen from port " + config.port);
+
+	var faye = require('faye');
+    var bayeux = new faye.NodeAdapter({
+        mount: '/comet/1'
+      , timeout: 60
+      , ping: 30
+    });
+
+    bayeux.attach(server);
+    fayeClients.push(bayeux.getClient());
+    console.log('Faye Server listening on port: ' + config.faye_port);
 });

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var userController = requireFromRoot("controllers/user");
-//var userMiddleware = requireFromRoot("middlewares/user");
+var userMiddleware = requireFromRoot("middlewares/user");
 
 
 router.get('/', function(req, res, next) {
@@ -42,11 +42,11 @@ router.post("/login", checkLoginParams ,userController.login);
 
 router.post("/register", checkRegisterParams, userController.register);
 
-// router.put("/",	userMiddleware.getUserAndRequire, userController.edit);
+router.put("/",	userMiddleware.getUserAndRequire, userController.edit);
 
 // router.post("/forget", userController.forgetPassword);
 
-// router.post("/logout",	userMiddleware.getUserAndRequire, userController.logout);
+router.get("/logout",	userMiddleware.getUserAndRequire, userController.logout);
 
 
 module.exports = router;

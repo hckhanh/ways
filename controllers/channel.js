@@ -165,6 +165,7 @@ exports.postMessage = function(req, res){
 		params.ownerId = req.user._id;
 		req.channel.postMessage(params)
 		.then(function(message){
+			fayeClients[0].publish("/" + req.channel._id, message);
 			outData({
 		      code: responseCode.SUCCESS,
 		      description : "Success",

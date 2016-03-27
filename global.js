@@ -72,3 +72,4 @@ global.constants = requireFromRoot('config/constants.json');
 
 global.BaseModel = requireFromRoot('models/base')
 global.extend = require('mongoose-schema-extend')
+global.fayeClients = [];
