@@ -16,6 +16,18 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ways.traffictracking.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".ScrollingActivityViewChannel"
+            android:label="@string/title_activity_scrolling_activity_view_channel"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,9 +35,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ScrollingActivityViewChannel"
-            android:label="@string/title_activity_scrolling_activity_view_channel"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".TabActivity"
+            android:label="@string/title_activity_tab"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MessageActivity"
+            android:label="@string/title_activity_message"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ways.traffictracking.HomeActivity" />
+        </activity>
+        <activity android:name=".RegisterActivity" />
     </application>
 
 </manifest>
